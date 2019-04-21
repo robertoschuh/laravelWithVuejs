@@ -16,6 +16,7 @@ const app = new Vue({
     data: {
         keeps: [],
         newKeep: '',
+        fillKeep: {'id' : '', 'keep' : ''},
         errors: []
     },
     methods: {
@@ -49,6 +50,30 @@ const app = new Vue({
             }).catch(error => {
                 this.errors = error.response.data;
             });
+        },
+
+        editKeep: function(keep){
+            var url = 'tasks';
+            this.fillKeep.id   = keep.id;
+            this.fillKeep.keep = keep.keep;
+            $('#edit').modal('show');
+        },
+
+        updateKeep: function(id){
+            alert('updating keep' + id);
+            url = 'tasks/' + id;
+            axios.put(url,
+                this.fillKeep
+            ).then(response => {
+                this.getKeeps();
+                this.fillKeep = {'id' : '', 'keep' : ''};
+                this.errors = [];
+                $('#edit').modal('hide');
+                toastr.success('Tasks edited succesfully');
+            }).catch(error => {
+                this.errors = error.response.data;
+            });
+            
         }
     }
 });
