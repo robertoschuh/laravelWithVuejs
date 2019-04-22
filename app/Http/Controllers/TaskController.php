@@ -14,7 +14,7 @@ class TaskController extends Controller
      */
     public function index(Request $request)
     {
-        $tasks = Task::orderBy('id', 'DESC')->paginate(5);
+        $tasks = Task::orderBy('id', 'DESC')->paginate(2);
 
         // Return all the tasks
         return [
