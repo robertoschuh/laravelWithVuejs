@@ -27,6 +27,9 @@ const app = new Vue({
         },
         errors: [],
         offset: 3,
+        offsetOptions: [1, 5, 10, 15, 20],
+        numRowsPerPage: 5,  // default value
+        resultsPerPageOptions: [1, 5, 10, 15, 20]
     },
     computed: {
         isActived: function(){
@@ -61,7 +64,7 @@ const app = new Vue({
     },
     methods: {
         getKeeps: function (page) {
-            var urlKeeps = 'tasks?page=' + page;
+            var urlKeeps = 'tasks?page=' + page + '&results=' + this.numRowsPerPage;
             axios.get(urlKeeps).then(response => {
 
                 this.keeps      = response.data.tasks.data;
