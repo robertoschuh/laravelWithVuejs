@@ -38,7 +38,7 @@
 							<th>ID</th>
 							<th>Tarea</th>
 							<th colspan="2">
-								&nbsp;
+								Items per page @{{ numRowsPerPage }}
 							</th>
 						</tr>
 					</thead>
