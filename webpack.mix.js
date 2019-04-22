@@ -12,7 +12,7 @@ const mix = require('laravel-mix');
  */
 
    
-mix.scripts([
+mix.js([
       'resources/js/jquery.js',
       'resources/js/bootstrap.js',
       'resources/js/toastr.js', 

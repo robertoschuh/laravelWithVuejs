@@ -16,7 +16,7 @@ Vue.component('infinite', require('vue-infinite-loading'));
 
 
 const app = new Vue({
-    el: '#app'
+    el: '#crud'
    // router
    
 });

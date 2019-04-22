@@ -1,9 +1,9 @@
 @extends('app')
 
 @section('content')
-<app></app>
-
-
+<div>
+    <tasks></tasks>
+</div>
 @endsection
 
 

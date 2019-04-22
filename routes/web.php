@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('dashboard');
+    return view('index');
 });
 
 Route::resource('tasks', 'TaskController', ['except' => 'show', 'create', 'edit']);
