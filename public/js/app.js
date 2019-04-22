@@ -1810,10 +1810,6 @@ __webpack_require__.r(__webpack_exports__);
   mounted: function mounted() {
     console.log('Component TaskComponent mounted.');
   },
-  // created is called everytime the object is created/instantiated
-  created: function created() {
-    this.getKeeps();
-  },
   data: function data() {
     return {
       keeps: [],
@@ -1822,95 +1818,33 @@ __webpack_require__.r(__webpack_exports__);
         'id': '',
         'keep': ''
       },
-      pagination: {
-        'total': 0,
-        'current_page': 0,
-        'per_page': 0,
-        'last_page': 0,
-        'from': 0,
-        'to': 0
-      },
       errors: [],
-      offset: 3
+      offset: 3,
+      page: 0
     };
   },
-  computed: {
-    // Returns the current page.
-    isActived: function isActived() {
-      return this.pagination.current_page;
-    },
-    pageNumber: function pageNumber() {
-      // If there is only one page.
-      if (!this.pagination.to) {
-        return [];
-      } // From what page you want to be able to go back? Exm where are in the page 5, if 
-      // offset is 2, we want to be able to back to the pages 3 and 4 (5 + 2 = 3)
-
-
-      var from = this.pagination.current_page - this.offset; // If there is only one page 1- offset always will be negative or cero.
-
-      if (from < 1) {
-        from = 1;
-      } // What pages you want to see after the current page to make possible navegation to them?
-      // If offset is for example 3, it needs to be double, exm: from 1 to 3 because offset is 3
-      // Then after the current page 3 we want double, it means 3 X 2, then we will see 1,2,3,4,5,6
-
-
-      var to = from + this.offset * 2; // Correct a possible wrong value for to, because for example if the calculation above is 
-      // Higher than the last page, then it has to be corrected.
-
-      if (to >= this.pagination.last_page) {
-        to = this.pagination.last_page;
-      } // Empty array to push the pages numbers, from the first one to the last.
-
-
-      var pagesArray = [];
-
-      while (from <= to) {
-        pagesArray.push(from);
-        from++;
-      }
-
-      console.log(pagesArray);
-      return pagesArray;
-    }
-  },
   methods: {
-    getKeeps: function getKeeps(page) {
-      var _this = this;
-
-      var urlKeeps = 'tasks?page=' + page;
-      axios.get(urlKeeps).then(function (response) {
-        _this.keeps = response.data.tasks.data;
-        _this.pagination = response.data.pagination;
-        console.log(_this.keeps);
-      });
-    },
     deleteKeep: function deleteKeep(keep) {
-      var _this2 = this;
-
       var url = 'tasks/' + keep.id;
       axios["delete"](url).then(function (response) {
-        _this2.getKeeps();
-
+        // this.getKeeps();
         toastr.success('Item removed');
       });
     },
     createKeep: function createKeep() {
-      var _this3 = this;
+      var _this = this;
 
       var url = 'tasks';
       axios.post(url, {
         keep: this.newKeep
       }).then(function (response) {
-        _this3.getKeeps();
-
-        _this3.newKeep = '';
-        _this3.errors = '';
+        // this.getKeeps();
+        _this.newKeep = '';
+        _this.errors = '';
         $('#create').modal('hide');
         toastr.success('New tasks created');
       })["catch"](function (error) {
-        _this3.errors = error.response.data;
+        _this.errors = error.response.data;
       });
     },
     editKeep: function editKeep(keep) {
@@ -1920,39 +1854,35 @@ __webpack_require__.r(__webpack_exports__);
       $('#edit').modal('show');
     },
     updateKeep: function updateKeep(id) {
-      var _this4 = this;
+      var _this2 = this;
 
       alert('updating keep' + id);
       url = 'tasks/' + id;
       axios.put(url, this.fillKeep).then(function (response) {
-        _this4.getKeeps();
-
-        _this4.fillKeep = {
+        //  this.getKeeps();
+        _this2.fillKeep = {
           'id': '',
           'keep': ''
         };
-        _this4.errors = [];
+        _this2.errors = [];
         $('#edit').modal('hide');
         toastr.success('Tasks edited succesfully');
       })["catch"](function (error) {
-        _this4.errors = error.response.data;
+        _this2.errors = error.response.data;
       });
     },
-    changePage: function changePage(page) {
-      this.pagination.current_page = page;
-      this.getKeeps(page);
-    },
+    // Infinite loading implementation.
     infiniteHandler: function infiniteHandler($state) {
-      var _this5 = this;
+      var _this3 = this;
 
       this.page++;
-      var url = 'http://laravelvuecrud.test/?page= ' + this.page;
+      var url = 'http://laravelvuecrud.test/api/tasks/?page= ' + this.page;
       axios.get(url).then(function (response) {
         console.log('result', response.data);
-        var books = response.data.data;
+        var tasks = response.data.data;
 
-        if (books.length) {
-          _this5.list = _this5.list.concat(books);
+        if (tasks.length) {
+          _this3.keeps = _this3.keeps.concat(tasks);
           $state.loaded();
         } else {
           $state.complete();
