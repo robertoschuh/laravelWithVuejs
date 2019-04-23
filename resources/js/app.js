@@ -7,7 +7,10 @@ window.Vue = require('vue');
 
  // Custom components.
 Vue.component('app', require('./components/AppComponent.vue').default);
+//Vue.component('editmodal', require('./components/EditModalComponent.vue').default);
+//Vue.component('createmodal', require('./components/CreateModalComponent.vue').default);
 Vue.component('tasks', require('./components/TasksComponent.vue').default);
+
 
 // Contrib components
 Vue.component('infinite', require('vue-infinite-loading'));

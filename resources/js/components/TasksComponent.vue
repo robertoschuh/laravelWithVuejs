@@ -15,30 +15,82 @@
                         <td width="10px">@{{ keep.id }}</td>
                         <td>@{{ keep.keep }}</td>
                         <td width="10px">
-                            <a href="#" class="btn btn-warning btn-sm" v-on:click.prevent="editKeep(keep)">Editar</a>
+                            <a href="#" class="btn btn-warning btn-sm" v-on:click="editKeep(keep)">Editar</a>
                         </td>
                         <td width="10px">
-                            <a href="#" class="btn btn-danger btn-sm" v-on:click.prevent="deleteKeep(keep)">Eliminar</a>
+                            <a href="#" class="btn btn-danger btn-sm" v-on:click="deleteKeep(keep)">Eliminar</a>
                         </td>
                     </tr>
                 </tbody>
             </table>
 
+            <!-- TODO move to a blade template 
+                @include('modal.edit')
+                @include('modal.create')
+            -->
+            <h4>modals here</h4>
+            <form method="POST" v-on:submit.prevent="createKeep">
+                <div class="modal fade" id="create">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <span>&times;</span>
+                                </button>
+                                <h4>Create</h4>
+                            </div>
+                            <div class="modal-body">
+                                <label for="keep">New Task</label>
+                                <input type="text" name="keep" class="form-control" v-model="newKeep">
+                                <span v-for="error in errors" class="text-danger">@{{ error }}</span>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="submit" class="btn btn-primary" value="Guardar">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+            <!-- TODO move to a blade template -->
+            <form method="POST" v-on:submit.prevent="updateKeep(fillKeep.id)">
+                <div class="modal fade" id="edit">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <span>&times;</span>
+                                </button>
+                                <h4>Edit</h4>
+                            </div>
+                            <div class="modal-body">
+                                <label for="keep">Update Task</label>
+                                <input type="text" name="keep" class="form-control" v-model="fillKeep.keep">
+                                <span v-for="error in errors" class="text-danger">@{{ error }}</span>
+                            </div>
+                            <div class="modal-footer">
+                                <input type="submit" class="btn btn-primary" value="Guardar">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
    
-            
             <infinite-loading @infinite="infiniteHandler">
                 <div slot="no-more">--</div>
                 <div slot="spinner">Loading tasks...</div>
                 <div slot="no-results">There are not tasks</div>
             </infinite-loading>
 
-  
+    
+
         <div class="col-sm-4">
             <pre>
                 @{{ $data }}
             </pre>
         </div>
     </div>
+
 </template>
 
 <script>
@@ -64,8 +116,8 @@
                 deleteKeep: function(keep){
                     var url = 'tasks/' + keep.id;
                     axios.delete(url).then(response => {
-                       // this.getKeeps();
                         toastr.success('Item removed');
+                        location.reload();
                     })
                 },
 
@@ -74,17 +126,18 @@
                     axios.post(url, {
                         keep: this.newKeep
                     }).then(response => {
-                       // this.getKeeps();
                         this.newKeep = '';
                         this.errors = '';
                         $('#create').modal('hide');
                         toastr.success('New tasks created');
+                        location.reload();
                     }).catch(error => {
                         this.errors = error.response.data;
                     });
                 },
 
                 editKeep: function(keep){
+                    console.log('modal edit');
                     var url = 'tasks';
                     this.fillKeep.id   = keep.id;
                     this.fillKeep.keep = keep.keep;
@@ -97,7 +150,6 @@
                     axios.put(url,
                         this.fillKeep
                     ).then(response => {
-                      //  this.getKeeps();
                         this.fillKeep = {'id' : '', 'keep' : ''};
                         this.errors = [];
                         $('#edit').modal('hide');

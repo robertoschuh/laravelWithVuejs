@@ -14,8 +14,9 @@ const mix = require('laravel-mix');
    
 mix.js([
       'resources/js/jquery.js',
+    //  'resources/js/toastr.js', 
       'resources/js/bootstrap.js',
-      'resources/js/toastr.js', 
+ 
       'resources/js/vue.js',
       'resources/js/axios.js',
       'resources/js/app.js',
