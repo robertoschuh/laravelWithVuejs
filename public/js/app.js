@@ -24405,7 +24405,7 @@ const app = new Vue({
             'to' : 0
         },
         errors: [],
-        offset: 3,
+        offset: 5,
         offsetOptions: [1, 5, 10, 15, 20],
         numRowsPerPage: 5,  // default value
         resultsPerPageOptions: [1, 5, 10, 15, 20]
